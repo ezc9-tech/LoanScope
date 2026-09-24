@@ -77,11 +77,14 @@ function App() {
       <h1>Loan$cope</h1>
       <div className="input-container">
         <label htmlFor="principal">Principal Amount: ${principal}</label>
-        <input type="range" min="1" max="100000" name="principal" id="principal" value={principal} onChange={(event) => setPrincipal(event.target.value)}/>
+        <input type="range" min="1" max="10000000" name="principal" id="principal" value={principal} onChange={(event) => setPrincipal(event.target.value)}/>
+        <input type="number" min="1" max="10000000" name="principal" id="principal" value={principal} onChange={(event) => setPrincipal(event.target.value)}/>
         <label htmlFor="interest">Interest Percentage: {interest}%</label>
         <input type="range" min="0" max="40" step=".01" name="interest" id="interest" value={interest} onChange={(event) => setInterest(event.target.value)}/>
+        <input type="number" min="0" max="40" step=".01" name="interest" id="interest" value={interest} onChange={(event) => setInterest(event.target.value)}/>
         <label htmlFor="payment">Payment Amount: ${payment}</label>
-        <input type="range" min="1" max="10000" name="payment" id="payment" value={payment} onChange={(event) => setPayment(event.target.value)}/>
+        <input type="range" min="1" max="1000000" name="payment" id="payment" value={payment} onChange={(event) => setPayment(event.target.value)}/>
+        <input type="number" min="1" max="1000000" name="payment" id="payment" value={payment} onChange={(event) => setPayment(event.target.value)}/>
       </div>
 
       {loanData && loanData.detail && (
