@@ -120,6 +120,10 @@ function App() {
       <div style={{ maxWidth: "800px", marginTop: "30px" }}>
         <canvas ref={chartRef} id="loanChart" width="400" height="400"></canvas>
       </div>
+
+      <p>
+        Disclaimer: This output is an illustrative estimate, not financial advice, and may not exactly match a lender's actual amortization terms (which can include fees, escrow, or non-monthly compounding).
+      </p>
     </>
   );
 }
