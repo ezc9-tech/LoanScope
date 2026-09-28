@@ -16,8 +16,9 @@ function App() {
   const [principal, setPrincipal] = useState(getQueryParamaters("principal", 10000, 1, 100000000));
   const [interest, setInterest] = useState(getQueryParamaters("interest", 5, 0, 40));
   const [payment, setPayment] = useState(getQueryParamaters("payment", 500, 1, Infinity));
+  const [showCumulativeInterest, setShowCumulativeInterest] = useState(false);
   const [loanData, setLoanData] = useState(null);
-  const [maxPayment, setMaxPayment] = useState(Math.max(1000000, principal * 3))
+  const [maxPayment, setMaxPayment] = useState(Math.max(1000000, principal * 3));
 
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
@@ -44,7 +45,7 @@ function App() {
   }
 
   useEffect(() => {
-    const thriceMinimum = 3 * (principal * ((interest / 100) / 12));
+    const thriceMinimum = 3 * (principal * (interest / 100 / 12));
     setMaxPayment(Math.max(1000000, thriceMinimum));
   }, [principal, interest]);
 
@@ -79,7 +80,6 @@ function App() {
 
   useEffect(() => {
     if (loanData && !loanData.detail && chartRef.current) {
-
       if (chartInstance.current) {
         chartInstance.current.destroy();
       }
@@ -89,17 +89,38 @@ function App() {
         (_, i) => `Month ${i + 1}`,
       );
 
+      const datasets = [
+        {
+          label: "Remaining Balance ($)",
+          data: loanData.total_remaining_month_to_month,
+          tension: 0.1,
+          borderColor: "rgba(54, 162, 235, 1)",
+        },
+      ];
+
+      if (
+        showCumulativeInterest &&
+        loanData.cumulative_interest_month_to_month
+      ) {
+        datasets.push({
+          label: "Cumulative Interest Paid ($)",
+          data: loanData.cumulative_interest_month_to_month,
+          tension: 0.1,
+          borderColor: "rgba(255, 99, 132, 1)",
+        });
+      }
+
       chartInstance.current = new Chart(chartRef.current, {
         type: "line",
         data: {
           labels: monthLabels,
-          datasets: [
-            {
-              label: "Remaining Balance ($)",
-              data: loanData.total_remaining_month_to_month,
-              tension: 0.1,
-            },
-          ],
+          datasets: datasets,
+        },
+        options: {
+          interaction: {
+            mode: "index",
+            intersect: false,
+          },
         },
       });
     }
@@ -109,7 +130,7 @@ function App() {
         chartInstance.current.destroy();
       }
     };
-  }, [loanData]);
+  }, [loanData, showCumulativeInterest]);
 
   let payoffDate = "";
   if (loanData) {
@@ -196,6 +217,14 @@ function App() {
             and {loanData.months_until_paid_off % 12} months
           </h3>
           <h3>Total Interest Paid: ${loanData.totalInterestPaid}</h3>
+
+          {loanData.warning && (
+            <div
+              style={{ color: "orange", fontWeight: "bold", marginTop: "10px" }}
+            >
+              {loanData.warning}
+            </div>
+          )}
         </div>
       )}
 
@@ -205,7 +234,18 @@ function App() {
         </div>
       )}
 
-      <div style={{ maxWidth: "800px", marginTop: "30px" }}>
+      <div style={{ marginTop: "20px" }}>
+        <label>
+          <input
+            type="checkbox"
+            checked={showCumulativeInterest}
+            onChange={(e) => setShowCumulativeInterest(e.target.checked)}
+          />
+          Overlay Cumulative Interest Paid
+        </label>
+      </div>
+
+      <div style={{ maxWidth: "800px", marginTop: "10px" }}>
         <canvas ref={chartRef} id="loanChart" width="400" height="400"></canvas>
       </div>
 
