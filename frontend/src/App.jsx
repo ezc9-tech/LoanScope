@@ -1,15 +1,36 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Chart from "chart.js/auto";
 
+function getQueryParamaters(paramName, defaultValue, min, max) {
+  const params = new URLSearchParams(window.location.search);
+  const value = parseFloat(params.get(paramName));
+
+  if (!isNaN(value) && value >= min && value <= max) {
+    return value;
+  }
+
+  return defaultValue;
+}
+
 function App() {
-  const [principal, setPrincipal] = useState(10000);
-  const [interest, setInterest] = useState(5);
-  const [payment, setPayment] = useState(500);
+  const [principal, setPrincipal] = useState(getQueryParamaters("principal", 10000, 1, 100000000));
+  const [interest, setInterest] = useState(getQueryParamaters("interest", 5, 0, 40));
+  const [payment, setPayment] = useState(getQueryParamaters("payment", 500, 1, Infinity));
   const [loanData, setLoanData] = useState(null);
   const [maxPayment, setMaxPayment] = useState(Math.max(1000000, principal * 3))
 
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
+
+  async function shareURL() {
+    try {
+      const baseUrl = window.location.origin + window.location.pathname;
+      await navigator.clipboard.writeText(baseUrl + `?principal=${principal}&interest=${interest}&payment=${payment}`);
+      alert("URL copied to clipboard!");
+    } catch (error) {
+      console.log("Failed to copy URL: ", error);
+    }
+  }
 
   useEffect(() => {
     const thriceMinimum = 3 * (principal * ((interest / 100) / 12));
@@ -99,6 +120,7 @@ function App() {
         <input type="range" min="1" max={maxPayment} name="payment" id="payment" value={payment} onChange={(event) => setPayment(event.target.value)}/>
         <input type="number" min="1" max={maxPayment} name="payment" id="payment" value={payment} onChange={(event) => setPayment(event.target.value)}/>
       </div>
+      <button onClick={shareURL}>Share</button>
 
       {loanData && !loanData.detail && (
         <div className="summary-container">
