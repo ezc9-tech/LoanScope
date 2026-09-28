@@ -21,6 +21,17 @@ function App() {
 
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
+  const lastInputSource = useRef("number");
+
+  const handleSliderChange = (setter) => (event) => {
+    lastInputSource.current = "slider";
+    setter(event.target.value);
+  };
+
+  const handleNumberChange = (setter) => (event) => {
+    lastInputSource.current = "number";
+    setter(event.target.value);
+  };
 
   async function shareURL() {
     try {
@@ -58,9 +69,10 @@ function App() {
   }, [principal, interest, payment]);
 
   useEffect(() => {
+    const delayTime = lastInputSource.current === "slider" ? 0 : 300;
     const delay = setTimeout(() => {
       fetchLoanData();
-    }, 300);
+    }, delayTime);
 
     return () => clearTimeout(delay);
   }, [fetchLoanData]);
@@ -110,15 +122,69 @@ function App() {
     <>
       <h1>Loan$cope</h1>
       <div className="input-container">
-        <label htmlFor="principal">Principal Amount: ${principal}</label>
-        <input type="range" min="1" max="100000000" name="principal" id="principal" value={principal} onChange={(event) => setPrincipal(event.target.value)}/>
-        <input type="number" min="1" max="100000000" name="principal" id="principal" value={principal} onChange={(event) => setPrincipal(event.target.value)}/>
-        <label htmlFor="interest">Interest Percentage: {interest}%</label>
-        <input type="range" min="0" max="40" step=".01" name="interest" id="interest" value={interest} onChange={(event) => setInterest(event.target.value)}/>
-        <input type="number" min="0" max="40" step=".01" name="interest" id="interest" value={interest} onChange={(event) => setInterest(event.target.value)}/>
-        <label htmlFor="payment">Payment Amount: ${payment}</label>
-        <input type="range" min="1" max={maxPayment} name="payment" id="payment" value={payment} onChange={(event) => setPayment(event.target.value)}/>
-        <input type="number" min="1" max={maxPayment} name="payment" id="payment" value={payment} onChange={(event) => setPayment(event.target.value)}/>
+        <label htmlFor="principal-number">Principal Amount: ${principal}</label>
+        <input
+          type="range"
+          min="1"
+          max="100000000"
+          name="principal"
+          id="principal-slider"
+          value={principal}
+          onChange={handleSliderChange(setPrincipal)}
+        />
+        <input
+          type="number"
+          min="1"
+          max="100000000"
+          name="principal"
+          id="principal-number"
+          value={principal}
+          onChange={handleNumberChange(setPrincipal)}
+        />
+
+        <label htmlFor="interest-number">
+          Interest Percentage: {interest}%
+        </label>
+        <input
+          type="range"
+          min="0"
+          max="40"
+          step=".01"
+          name="interest"
+          id="interest-slider"
+          value={interest}
+          onChange={handleSliderChange(setInterest)}
+        />
+        <input
+          type="number"
+          min="0"
+          max="40"
+          step=".01"
+          name="interest"
+          id="interest-number"
+          value={interest}
+          onChange={handleNumberChange(setInterest)}
+        />
+
+        <label htmlFor="payment-number">Payment Amount: ${payment}</label>
+        <input
+          type="range"
+          min="1"
+          max={maxPayment}
+          name="payment"
+          id="payment-slider"
+          value={payment}
+          onChange={handleSliderChange(setPayment)}
+        />
+        <input
+          type="number"
+          min="1"
+          max={maxPayment}
+          name="payment"
+          id="payment-number"
+          value={payment}
+          onChange={handleNumberChange(setPayment)}
+        />
       </div>
       <button onClick={shareURL}>Share</button>
 
@@ -138,13 +204,15 @@ function App() {
           <strong>Error:</strong> {loanData.detail}
         </div>
       )}
-      
+
       <div style={{ maxWidth: "800px", marginTop: "30px" }}>
         <canvas ref={chartRef} id="loanChart" width="400" height="400"></canvas>
       </div>
 
       <p>
-        Disclaimer: This output is an illustrative estimate, not financial advice, and may not exactly match a lender's actual amortization terms (which can include fees, escrow, or non-monthly compounding).
+        Disclaimer: This output is an illustrative estimate, not financial
+        advice, and may not exactly match a lender's actual amortization terms
+        (which can include fees, escrow, or non-monthly compounding).
       </p>
     </>
   );
