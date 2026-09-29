@@ -35,4 +35,6 @@ then run `uv run fastapi dev main.py`
 
 run `cd frontend`
 
+run `npm i`
+
 then run `npm run dev`
