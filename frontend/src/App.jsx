@@ -3,6 +3,7 @@ import { getQueryParameters } from "./utils/helpers";
 import LoanControls from "./components/LoanControls";
 import LoanSummary from "./components/LoanSummary";
 import LoanChart from "./components/LoanChart";
+import AmortizationTable from "./components/AmortizationTable"; // <-- 1. ADD THIS IMPORT
 
 function App() {
   const [principal, setPrincipal] = useState(getQueryParameters("principal", 10000, 1, 100000000));
@@ -95,11 +96,14 @@ function App() {
       />
 
       {loanData && !loanData.detail && (
-        <LoanChart
-          loanData={loanData}
-          showCumulativeInterest={showCumulativeInterest}
-          setShowCumulativeInterest={setShowCumulativeInterest}
-        />
+        <>
+          <LoanChart
+            loanData={loanData}
+            showCumulativeInterest={showCumulativeInterest}
+            setShowCumulativeInterest={setShowCumulativeInterest}
+          />
+          <AmortizationTable loanData={loanData} />
+        </>
       )}
 
       <p>

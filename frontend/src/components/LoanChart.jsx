@@ -65,7 +65,7 @@ export default function LoanChart({
 
   return (
     <>
-      <div style={{ marginTop: "20px" }}>
+      <div>
         <label>
           <input
             type="checkbox"
@@ -76,7 +76,7 @@ export default function LoanChart({
         </label>
       </div>
 
-      <div style={{ maxWidth: "800px", marginTop: "10px" }}>
+      <div>
         <canvas ref={chartRef} id="loanChart" width="400" height="400"></canvas>
       </div>
     </>
