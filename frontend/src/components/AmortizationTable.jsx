@@ -32,9 +32,17 @@ export default function AmortizationTable({ loanData }) {
 
   return (
     <div>
-      <h2>Amortization Schedule</h2>
+      <h2 style={{ textAlign: "center" }}>Amortization Schedule</h2>
 
-      <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "15px",
+        }}
+      >
+        <button onClick={handleExportCSV}>Export CSV</button>
         <div>
           <label htmlFor="year-filter">Filter by Year: </label>
           <input
@@ -45,19 +53,11 @@ export default function AmortizationTable({ loanData }) {
             value={selectedYear}
             onChange={(e) => setSelectedYear(Number(e.target.value))}
           />
-          <span>
-            {" "}
-            (Total Years: {totalYears})
-          </span>
+          <span> (Total Years: {totalYears})</span>
         </div>
-
-        <button onClick={handleExportCSV}>Export CSV</button>
       </div>
 
-      <table
-        border="1"
-        cellPadding="8"
-        >
+      <table border="1" cellPadding="8">
         <thead>
           <tr>
             <th>Month</th>

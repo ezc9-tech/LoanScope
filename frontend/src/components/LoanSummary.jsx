@@ -3,9 +3,14 @@ import { formatCurrency } from "../utils/helpers";
 export default function LoanSummary({ loanData, payoffDate, shareURL }) {
   return (
     <>
-      <button onClick={shareURL}>
-        Share Scenario
-      </button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "20px",
+        }}>
+        <button onClick={shareURL}>Share Scenario</button>
+      </div>
 
       {loanData && !loanData.detail && (
         <div className="summary-container">
@@ -18,11 +23,7 @@ export default function LoanSummary({ loanData, payoffDate, shareURL }) {
             Total Interest Paid: {formatCurrency(loanData.totalInterestPaid)}
           </h3>
 
-          {loanData.warning && (
-            <div>
-              {loanData.warning}
-            </div>
-          )}
+          {loanData.warning && <div>{loanData.warning}</div>}
         </div>
       )}
 

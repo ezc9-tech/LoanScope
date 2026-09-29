@@ -65,17 +65,17 @@ export default function LoanChart({
 
   return (
     <>
-      <div>
+      <h2 style={{ textAlign: "center" }}>Payment/Interest Graph</h2>
+      <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
         <label>
           <input
-            type="checkbox"
-            checked={showCumulativeInterest}
-            onChange={(e) => setShowCumulativeInterest(e.target.checked)}
-          />
-          Overlay Cumulative Interest Paid
-        </label>
-      </div>
-
+              type="checkbox"
+              checked={showCumulativeInterest}
+              onChange={(e) => setShowCumulativeInterest(e.target.checked)}
+            />
+            Overlay Cumulative Interest Paid
+          </label>
+        </div>
       <div>
         <canvas ref={chartRef} id="loanChart" width="400" height="400"></canvas>
       </div>
