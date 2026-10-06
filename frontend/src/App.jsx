@@ -3,7 +3,7 @@ import { getQueryParameters } from "./utils/helpers";
 import LoanControls from "./components/LoanControls";
 import LoanSummary from "./components/LoanSummary";
 import LoanChart from "./components/LoanChart";
-import AmortizationTable from "./components/AmortizationTable"; // <-- 1. ADD THIS IMPORT
+import AmortizationTable from "./components/AmortizationTable";
 
 function App() {
   const [principal, setPrincipal] = useState(getQueryParameters("principal", 10000, 1, 100000000));
